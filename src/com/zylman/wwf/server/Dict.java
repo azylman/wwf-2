@@ -9,7 +9,6 @@ import java.util.SortedSet;
 
 import com.zylman.wwf.shared.Result;
 import com.zylman.wwf.shared.SolveResult;
-import com.zylman.wwf.shared.Trie;
 
 // HOW TO IMPROVE FURTHER:
 //	1. Sort words before they're added to the dictionary and then turn the "words" string to a list.
