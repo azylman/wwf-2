@@ -2,6 +2,9 @@ package com.zylman.wwf.server;
 
 import java.io.IOException;
 import javax.servlet.http.*;
+
+import com.zylman.wwf.shared.Result;
+
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.PriorityQueue;
 
@@ -9,7 +12,7 @@ import java.util.PriorityQueue;
 public class WWFSolverServlet extends HttpServlet
 {
 
-	public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException
+	public void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException
 	{
 		String rack = req.getParameter("rack");
 		String start = req.getParameter("start");
@@ -32,15 +35,15 @@ public class WWFSolverServlet extends HttpServlet
 
 	public String getResults(String rack, String start, String contains, String end)
 	{
-		ConcurrentSkipListSet<SolveResult> results = new ConcurrentSkipListSet<SolveResult>();
+		ConcurrentSkipListSet<Result> results = new ConcurrentSkipListSet<Result>();
 
 		Dict dict = DictWrapper.get();
 
-		dict.solve(rack, start, contains, end, results);
+		//dict.solve(rack, start, contains, end, results);
 
-		PriorityQueue<SolveResult> sortedResults = new PriorityQueue<SolveResult>(results);
+		PriorityQueue<Result> sortedResults = new PriorityQueue<Result>(results);
 
-		SolveResult r = sortedResults.poll();
+		Result r = sortedResults.poll();
 
 		StringBuilder resultText = new StringBuilder("{\"word\":\"" + rack + "\",\"error\":" + false + ",\"results\":[");
 

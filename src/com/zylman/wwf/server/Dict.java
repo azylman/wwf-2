@@ -1,12 +1,15 @@
 package com.zylman.wwf.server;
 
-import com.zylman.wwf.server.SolveResult;
-import com.zylman.wwf.shared.Trie;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Hashtable;
 import java.util.SortedSet;
+
+import com.zylman.wwf.shared.Result;
+import com.zylman.wwf.shared.SolveResult;
+import com.zylman.wwf.shared.Trie;
 
 // HOW TO IMPROVE FURTHER:
 //	1. Sort words before they're added to the dictionary and then turn the "words" string to a list.
@@ -15,6 +18,46 @@ import java.util.SortedSet;
 //		needing to recompute the whole structure
 public class Dict
 {
+	@SuppressWarnings("serial")
+	private static final Hashtable<Character,Integer> scores = new Hashtable<Character,Integer>() {{
+		put('a', 1);
+		put('b', 4);
+		put('c', 4);
+		put('d', 2);
+		put('e', 1);
+		put('f', 4);
+		put('g', 3);
+		put('h', 3);
+		put('i', 1);
+		put('j', 10);
+		put('k', 5);
+		put('l', 2);
+		put('m', 4);
+		put('n', 2);
+		put('o', 1);
+		put('p', 4);
+		put('q', 5);
+		put('r', 1);
+		put('s', 1);
+		put('t', 1);
+		put('u', 2);
+		put('v', 5);
+		put('w', 4);
+		put('x', 8);
+		put('y', 3);
+		put('z', 10);
+	}};
+	
+	public static int score(String word)
+	{
+		int sum = 0;
+		for(int i = 0; i < word.length(); ++i)
+		{
+			sum += scores.get(word.toLowerCase().charAt(i));
+		}
+		return sum;
+	}
+	
 	Trie wordList = new Trie();
 
 	public Dict( String fileName )
@@ -61,7 +104,7 @@ public class Dict
 		
 		if(endNode != null && contains.isEmpty() && !endNode.word.isEmpty())
 		{
-			results.add(new SolveResult(endNode.word));
+			results.add(new SolveResult(endNode.word, score(endNode.word)));
 		}
 		
 		for(int i = 0; i < word.length(); i++)

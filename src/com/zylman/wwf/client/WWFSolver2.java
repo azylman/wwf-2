@@ -1,6 +1,10 @@
 package com.zylman.wwf.client;
 
-import com.zylman.wwf.shared.FieldVerifier;
+import java.util.Comparator;
+import java.util.List;
+
+import com.zylman.wwf.shared.Result;
+import com.zylman.wwf.shared.SolveResult;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -16,48 +20,141 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
+import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.cellview.client.CellTable;
+import com.google.gwt.view.client.ListDataProvider;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class WWFSolver2 implements EntryPoint
 {
-
-	/**
-	 * The message displayed to the user when the server cannot be reached or
-	 * returns an error.
-	 */
-	private static final String SERVER_ERROR = "An error occurred while " + "attempting to contact the server. Please check your network "
-			+ "connection and try again.";
-
-	/**
-	 * Create a remote service proxy to talk to the server-side Greeting
-	 * service.
-	 */
-	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
-
+	
+  private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
+	
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad()
 	{
-		final Button sendButton = new Button("Send");
-		final TextBox nameField = new TextBox();
-		nameField.setText("GWT User");
+		final Button sendButton = new Button("Submit");
+		final TextBox rack = new TextBox();
+		final TextBox start = new TextBox();
+		final TextBox contains = new TextBox();
+		final TextBox end = new TextBox();
+		final TextBox test = new TextBox();
+		final CellTable<SolveResult> results = new CellTable<SolveResult>();
 		final Label errorLabel = new Label();
 
+		TextColumn<SolveResult> wordColumn = new TextColumn<SolveResult>() {
+			@Override
+			public String getValue(SolveResult object) {
+				return object.getWord();
+			}
+		};
+		
+		TextColumn<SolveResult> scoreColumn = new TextColumn<SolveResult>() {
+			@Override
+			public String getValue(SolveResult object) {
+				return object.getScore().toString();
+			}
+		};
+		
+		TextColumn<SolveResult> lengthColumn = new TextColumn<SolveResult>() {
+			@Override
+			public String getValue(SolveResult object) {
+				return object.getLength().toString();
+			}
+		};
+		
+		wordColumn.setSortable(true);
+		scoreColumn.setSortable(true);
+		lengthColumn.setSortable(true);
+		results.addColumn(wordColumn, "Word");
+		results.addColumn(lengthColumn, "Length");
+		results.addColumn(scoreColumn, "Score");
+		
+		ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
+		dataProvider.addDataDisplay(results);
+  	final List<SolveResult> resultList = dataProvider.getList();
+  	
+  	// Add a ColumnSortEvent.ListHandler to connect sorting to the
+    // java.util.List.
+    ListHandler<SolveResult> wordColumnSortHandler = new ListHandler<SolveResult>(
+        resultList);
+    wordColumnSortHandler.setComparator(wordColumn,
+        new Comparator<SolveResult>() {
+          public int compare(SolveResult o1, SolveResult o2) {
+            if (o1 == o2) {
+              return 0;
+            }
+
+            // Compare the name columns.
+            if (o1 != null) {
+              return (o2 != null) ? o1.getWord().compareTo(o2.getWord()) : 1;
+            }
+            return -1;
+          }
+        });
+    results.addColumnSortHandler(wordColumnSortHandler);
+    
+    ListHandler<SolveResult> lengthColumnSortHandler = new ListHandler<SolveResult>(
+        resultList);
+    lengthColumnSortHandler.setComparator(lengthColumn,
+        new Comparator<SolveResult>() {
+          public int compare(SolveResult o1, SolveResult o2) {
+            if (o1 == o2) {
+              return 0;
+            }
+
+            // Compare the name columns.
+            if (o1 != null) {
+              return (o2 != null) ? o1.getLength().compareTo(o2.getLength()) : 1;
+            }
+            return -1;
+          }
+        });
+    results.addColumnSortHandler(lengthColumnSortHandler);
+
+    ListHandler<SolveResult> scoreColumnSortHandler = new ListHandler<SolveResult>(
+        resultList);
+    scoreColumnSortHandler.setComparator(scoreColumn,
+        new Comparator<SolveResult>() {
+          public int compare(SolveResult o1, SolveResult o2) {
+            if (o1 == o2) {
+              return 0;
+            }
+
+            // Compare the name columns.
+            if (o1 != null) {
+              return (o2 != null) ? o1.getScore().compareTo(o2.getScore()) : 1;
+            }
+            return -1;
+          }
+        });
+    results.addColumnSortHandler(scoreColumnSortHandler);
+    
+    results.getColumnSortList().push(scoreColumn);
+    results.setPageSize(999999);
+		
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 
 		// Add the nameField and sendButton to the RootPanel
 		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("nameFieldContainer").add(nameField);
+		RootPanel.get("rackContainer").add(rack);
+		RootPanel.get("startContainer").add(start);
+		RootPanel.get("containsContainer").add(contains);
+		RootPanel.get("endContainer").add(end);
+		RootPanel.get("testContainer").add(test);
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
+		RootPanel.get("resultsContainer").add(results);
 
 		// Focus the cursor on the name field when the app loads
-		nameField.setFocus(true);
-		nameField.selectAll();
+		rack.setFocus(true);
+		rack.selectAll();
 
 		// Create the popup dialog box
 		final DialogBox dialogBox = new DialogBox();
@@ -91,7 +188,7 @@ public class WWFSolver2 implements EntryPoint
 		});
 
 		// Create a handler for the sendButton and nameField
-		class MyHandler implements ClickHandler, KeyUpHandler
+		class SolveHandler implements ClickHandler, KeyUpHandler
 		{
 
 			/**
@@ -119,47 +216,31 @@ public class WWFSolver2 implements EntryPoint
 			 */
 			private void sendNameToServer()
 			{
-				// First, we validate the input.
-				errorLabel.setText("");
-				String textToServer = nameField.getText();
-				if (!FieldVerifier.isValidName(textToServer))
-				{
-					errorLabel.setText("Please enter at least four characters");
-					return;
-				}
+		    // Set up the callback object.
+		    AsyncCallback<Result> callback = new AsyncCallback<Result>() {
+		      public void onFailure(Throwable caught) {
+		      	errorLabel.setText("failure!");
+		      }
 
-				// Then, we send the input to the server.
-				sendButton.setEnabled(false);
-				textToServerLabel.setText(textToServer);
-				serverResponseLabel.setText("");
-				greetingService.greetServer(textToServer, new AsyncCallback<String>()
-				{
+		      public void onSuccess(Result results) {
+		      	resultList.clear();
+		        resultList.addAll(results.getWords());
+		      }
+		    };
 
-					public void onFailure(Throwable caught)
-					{
-						// Show the RPC error message to the user
-						dialogBox.setText("Remote Procedure Call - Failure");
-						serverResponseLabel.addStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(SERVER_ERROR);
-						dialogBox.center();
-						closeButton.setFocus(true);
-					}
-
-					public void onSuccess(String result)
-					{
-						dialogBox.setText("Remote Procedure Call");
-						serverResponseLabel.removeStyleName("serverResponseLabelError");
-						serverResponseLabel.setHTML(result);
-						dialogBox.center();
-						closeButton.setFocus(true);
-					}
-				});
+		    // Make the call to the solve service.
+		    wwfSolveService.getResults(
+		    		rack.getText(),
+		    		start.getText(),
+		    		contains.getText(),
+		    		end.getText(),
+		    		callback);
 			}
 		}
-
+		
 		// Add a handler to send the name to the server
-		MyHandler handler = new MyHandler();
+		SolveHandler handler = new SolveHandler();
 		sendButton.addClickHandler(handler);
-		nameField.addKeyUpHandler(handler);
+		rack.addKeyUpHandler(handler);
 	}
 }

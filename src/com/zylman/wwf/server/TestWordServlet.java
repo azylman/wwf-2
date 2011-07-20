@@ -17,8 +17,7 @@ public class TestWordServlet extends HttpServlet
 		
 		if (word != null && !word.isEmpty())
 		{	
-
-			out.addProperty("value",DictWrapper.score( dict.isWord(word) ? word : "" ));
+			out.addProperty("value", Dict.score( dict.isWord(word) ? word : "" ));
 			resp.getWriter().print(out.toString());
 		}
 		else
