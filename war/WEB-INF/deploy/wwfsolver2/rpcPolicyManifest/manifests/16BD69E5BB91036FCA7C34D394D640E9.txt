@@ -1,2 +1,0 @@
-serviceClass: com.zylman.wwf.client.WwfSolveService
-path: A986F96161ABCD831504924777B3DE10.gwt.rpc

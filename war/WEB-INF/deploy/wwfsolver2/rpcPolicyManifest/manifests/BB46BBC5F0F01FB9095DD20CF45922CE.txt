@@ -1,2 +1,0 @@
-serviceClass: com.zylman.wwf.client.GreetingService
-path: 39885F9E017CA9CA76FD6601FAD7E2CB.gwt.rpc
