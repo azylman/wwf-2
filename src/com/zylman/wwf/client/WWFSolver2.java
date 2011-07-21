@@ -28,13 +28,12 @@ import com.google.gwt.view.client.ListDataProvider;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class WWFSolver2 implements EntryPoint
-{
-	
-  private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
-  private final WwfWordTestServiceAsync wwfWordTestService = GWT.create(WwfWordTestService.class);
-	
-  final Button sendButton = new Button("Submit");
+public class WWFSolver2 implements EntryPoint {
+
+	private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
+	private final WwfWordTestServiceAsync wwfWordTestService = GWT.create(WwfWordTestService.class);
+
+	final Button sendButton = new Button("Submit");
 	final TextBox rack = new TextBox();
 	final TextBox start = new TextBox();
 	final TextBox contains = new TextBox();
@@ -45,102 +44,101 @@ public class WWFSolver2 implements EntryPoint
 	final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
 	final List<SolveResult> resultList = dataProvider.getList();
 	final Label testResults = new Label();
-  
+
 	/**
 	 * This is the entry point method.
 	 */
-	public void onModuleLoad()
-	{
+	public void onModuleLoad() {
 		TextColumn<SolveResult> wordColumn = new TextColumn<SolveResult>() {
+
 			@Override
 			public String getValue(SolveResult object) {
 				return object.getWord();
 			}
 		};
-		
+
 		TextColumn<SolveResult> scoreColumn = new TextColumn<SolveResult>() {
+
 			@Override
 			public String getValue(SolveResult object) {
 				return object.getScore().toString();
 			}
 		};
-		
+
 		TextColumn<SolveResult> lengthColumn = new TextColumn<SolveResult>() {
+
 			@Override
 			public String getValue(SolveResult object) {
 				return object.getLength().toString();
 			}
 		};
-		
+
 		wordColumn.setSortable(true);
 		scoreColumn.setSortable(true);
 		lengthColumn.setSortable(true);
 		results.addColumn(wordColumn, "Word");
 		results.addColumn(lengthColumn, "Length");
 		results.addColumn(scoreColumn, "Score");
-		
+
 		dataProvider.addDataDisplay(results);
-  	
-  	// Add a ColumnSortEvent.ListHandler to connect sorting to the
-    // java.util.List.
-    ListHandler<SolveResult> wordColumnSortHandler = new ListHandler<SolveResult>(
-        resultList);
-    wordColumnSortHandler.setComparator(wordColumn,
-        new Comparator<SolveResult>() {
-          public int compare(SolveResult o1, SolveResult o2) {
-            if (o1 == o2) {
-              return 0;
-            }
 
-            // Compare the name columns.
-            if (o1 != null) {
-              return (o2 != null) ? o1.getWord().compareTo(o2.getWord()) : 1;
-            }
-            return -1;
-          }
-        });
-    
-    ListHandler<SolveResult> lengthColumnSortHandler = new ListHandler<SolveResult>(
-        resultList);
-    lengthColumnSortHandler.setComparator(lengthColumn,
-        new Comparator<SolveResult>() {
-          public int compare(SolveResult o1, SolveResult o2) {
-            if (o1 == o2) {
-              return 0;
-            }
+		// Add a ColumnSortEvent.ListHandler to connect sorting to the
+		// java.util.List.
+		ListHandler<SolveResult> wordColumnSortHandler = new ListHandler<SolveResult>(resultList);
+		wordColumnSortHandler.setComparator(wordColumn, new Comparator<SolveResult>() {
 
-            // Compare the name columns.
-            if (o1 != null) {
-              return (o2 != null) ? o1.getLength().compareTo(o2.getLength()) : 1;
-            }
-            return -1;
-          }
-        });
+			public int compare(SolveResult o1, SolveResult o2) {
+				if (o1 == o2) {
+					return 0;
+				}
 
-    ListHandler<SolveResult> scoreColumnSortHandler = new ListHandler<SolveResult>(
-        resultList);
-    scoreColumnSortHandler.setComparator(scoreColumn,
-        new Comparator<SolveResult>() {
-          public int compare(SolveResult o1, SolveResult o2) {
-            if (o1 == o2) {
-              return 0;
-            }
+				// Compare the name columns.
+				if (o1 != null) {
+					return (o2 != null) ? o1.getWord().compareTo(o2.getWord()) : 1;
+				}
+				return -1;
+			}
+		});
 
-            // Compare the name columns.
-            if (o1 != null) {
-              return (o2 != null) ? o1.getScore().compareTo(o2.getScore()) : 1;
-            }
-            return -1;
-          }
-        });
-    
-    results.addColumnSortHandler(wordColumnSortHandler);
-    results.addColumnSortHandler(lengthColumnSortHandler);
-    results.addColumnSortHandler(scoreColumnSortHandler);
-    
-    results.getColumnSortList().push(scoreColumn);
-    results.setPageSize(999999);
-		
+		ListHandler<SolveResult> lengthColumnSortHandler = new ListHandler<SolveResult>(resultList);
+		lengthColumnSortHandler.setComparator(lengthColumn, new Comparator<SolveResult>() {
+
+			public int compare(SolveResult o1, SolveResult o2) {
+				if (o1 == o2) {
+					return 0;
+				}
+
+				// Compare the name columns.
+				if (o1 != null) {
+					return (o2 != null) ? o1.getLength().compareTo(o2.getLength()) : 1;
+				}
+				return -1;
+			}
+		});
+
+		ListHandler<SolveResult> scoreColumnSortHandler = new ListHandler<SolveResult>(resultList);
+		scoreColumnSortHandler.setComparator(scoreColumn, new Comparator<SolveResult>() {
+
+			public int compare(SolveResult o1, SolveResult o2) {
+				if (o1 == o2) {
+					return 0;
+				}
+
+				// Compare the name columns.
+				if (o1 != null) {
+					return (o2 != null) ? o1.getScore().compareTo(o2.getScore()) : 1;
+				}
+				return -1;
+			}
+		});
+
+		results.addColumnSortHandler(wordColumnSortHandler);
+		results.addColumnSortHandler(lengthColumnSortHandler);
+		results.addColumnSortHandler(scoreColumnSortHandler);
+
+		results.getColumnSortList().push(scoreColumn);
+		results.setPageSize(999999);
+
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 
@@ -180,11 +178,9 @@ public class WWFSolver2 implements EntryPoint
 		dialogBox.setWidget(dialogVPanel);
 
 		// Add a handler to close the DialogBox
-		closeButton.addClickHandler(new ClickHandler()
-		{
+		closeButton.addClickHandler(new ClickHandler() {
 
-			public void onClick(ClickEvent event)
-			{
+			public void onClick(ClickEvent event) {
 				dialogBox.hide();
 				sendButton.setEnabled(true);
 				sendButton.setFocus(true);
@@ -192,36 +188,32 @@ public class WWFSolver2 implements EntryPoint
 		});
 
 		// Create a handler for the sendButton and nameField
-		class SolveHandler implements ClickHandler, KeyUpHandler
-		{
+		class SolveHandler implements ClickHandler, KeyUpHandler {
+
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
-			public void onClick(ClickEvent event)
-			{
+			public void onClick(ClickEvent event) {
 				getAnagrams();
 			}
 
 			/**
 			 * Fired when the user types in the nameField.
 			 */
-			public void onKeyUp(KeyUpEvent event)
-			{
-				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
-				{
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 					getAnagrams();
 				}
 			}
 		}
-		
-		class TestHandler implements KeyUpHandler
-		{
-			public void onKeyUp(KeyUpEvent event)
-			{
+
+		class TestHandler implements KeyUpHandler {
+
+			public void onKeyUp(KeyUpEvent event) {
 				testWord();
 			}
 		}
-		
+
 		// Add a handler to send the name to the server
 		SolveHandler solveHandler = new SolveHandler();
 		TestHandler testHandler = new TestHandler();
@@ -229,46 +221,44 @@ public class WWFSolver2 implements EntryPoint
 		rack.addKeyUpHandler(solveHandler);
 		test.addKeyUpHandler(testHandler);
 	}
-	
+
 	private void getAnagrams() {
-    // Set up the callback object.
-    AsyncCallback<Result> callback = new AsyncCallback<Result>() {
-      public void onFailure(Throwable caught) {
-      	errorLabel.setText("failure!");
-      }
+		// Set up the callback object.
+		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
 
-      public void onSuccess(Result results) {
-      	resultList.clear();
-        resultList.addAll(results.getWords());
-      }
-    };
+			public void onFailure(Throwable caught) {
+				errorLabel.setText("failure!");
+			}
 
-    // Make the call to the solve service.
-    wwfSolveService.findAnagrams(
-    		rack.getText(),
-    		start.getText(),
-    		contains.getText(),
-    		end.getText(),
-    		callback);
+			public void onSuccess(Result results) {
+				resultList.clear();
+				resultList.addAll(results.getWords());
+			}
+		};
+
+		// Make the call to the solve service.
+		wwfSolveService.findAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText(), callback);
 	}
-	
+
 	private void testWord() {
 		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
-			public void onFailure(Throwable caught) {
-      	errorLabel.setText("failure!");
-      }
 
-      public void onSuccess(Result results) {
-      	if(results.getError()) {
-      		testResults.setText("That's not a word.");
-      	} else {
-      		testResults.setText(results.getQuery() + " is worth " + results.getWords().get(0).getScore() + " points!");
-      	}
-      }
-    };
-    
-    errorLabel.setText("");
-    testResults.setText("");
-    wwfWordTestService.testWord(test.getText(), callback);
+			public void onFailure(Throwable caught) {
+				errorLabel.setText("failure!");
+			}
+
+			public void onSuccess(Result results) {
+				if (results.getError()) {
+					testResults.setText("That's not a word.");
+				}
+				else {
+					testResults.setText(results.getQuery() + " is worth " + results.getWords().get(0).getScore() + " points!");
+				}
+			}
+		};
+
+		errorLabel.setText("");
+		testResults.setText("");
+		wwfWordTestService.testWord(test.getText(), callback);
 	}
 }
