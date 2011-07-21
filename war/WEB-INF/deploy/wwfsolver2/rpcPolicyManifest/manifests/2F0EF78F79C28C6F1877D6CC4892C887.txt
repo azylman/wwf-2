@@ -1,0 +1,2 @@
+serviceClass: com.zylman.wwf.client.WwfWordTestService
+path: 5078647A38CA3FB7EDFFB12843794A66.gwt.rpc

@@ -11,32 +11,20 @@
     <servlet-name>DefaultWwfSolveService</servlet-name>
     <servlet-class>com.zylman.wwf.server.WwfSolveServiceImpl</servlet-class>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>DefaultWwfSolveService</servlet-name>
     <url-pattern>/wwfsolver2/wwfSolve</url-pattern>
   </servlet-mapping>
 
 	<servlet>
-		<servlet-name>WWFSolver</servlet-name>
-		<servlet-class>com.zylman.wwf.server.WWFSolverServlet</servlet-class>
+		<servlet-name>DefaultWwfWordTestService</servlet-name>
+		<servlet-class>com.zylman.wwf.server.WwfWordTestServiceImpl</servlet-class>
 	</servlet>
-
-	<servlet>
-		<servlet-name>TestWord</servlet-name>
-		<servlet-class>com.zylman.wwf.server.TestWordServlet</servlet-class>
-	</servlet>
-	
 	<servlet-mapping>
-		<servlet-name>WWFSolver</servlet-name>
-		<url-pattern>/wwfsolver2/solve</url-pattern>
+		<servlet-name>DefaultWwfWordTestService</servlet-name>
+		<url-pattern>/wwfsolver2/wwfTest</url-pattern>
 	</servlet-mapping>
 	
-	<servlet-mapping>
-		<servlet-name>TestWord</servlet-name>
-		<url-pattern>/wwfsolver2/test</url-pattern>
-	</servlet-mapping>
-
 	<!-- Default page to serve -->
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>

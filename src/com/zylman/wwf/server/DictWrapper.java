@@ -1,9 +1,5 @@
 package com.zylman.wwf.server;
 
-import java.util.Hashtable;
-
-
-
 public final class DictWrapper
 {
 	private static final Dict dict = new Dict( "dict.txt" );

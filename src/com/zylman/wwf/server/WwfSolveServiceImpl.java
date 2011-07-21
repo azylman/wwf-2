@@ -11,7 +11,7 @@ import com.zylman.wwf.shared.SolveResult;
 
 public class WwfSolveServiceImpl extends RemoteServiceServlet implements WwfSolveService {
 
-	public Result getResults(String rack, String start, String contains, String end) {
+	public Result findAnagrams(String rack, String start, String contains, String end) {
 		ConcurrentSkipListSet<SolveResult> results = new ConcurrentSkipListSet<SolveResult>();
 
 		Dict dict = DictWrapper.get();

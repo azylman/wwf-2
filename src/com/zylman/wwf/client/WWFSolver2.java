@@ -32,21 +32,25 @@ public class WWFSolver2 implements EntryPoint
 {
 	
   private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
+  private final WwfWordTestServiceAsync wwfWordTestService = GWT.create(WwfWordTestService.class);
 	
+  final Button sendButton = new Button("Submit");
+	final TextBox rack = new TextBox();
+	final TextBox start = new TextBox();
+	final TextBox contains = new TextBox();
+	final TextBox end = new TextBox();
+	final TextBox test = new TextBox();
+	final CellTable<SolveResult> results = new CellTable<SolveResult>();
+	final Label errorLabel = new Label();
+	final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
+	final List<SolveResult> resultList = dataProvider.getList();
+	final Label testResults = new Label();
+  
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad()
 	{
-		final Button sendButton = new Button("Submit");
-		final TextBox rack = new TextBox();
-		final TextBox start = new TextBox();
-		final TextBox contains = new TextBox();
-		final TextBox end = new TextBox();
-		final TextBox test = new TextBox();
-		final CellTable<SolveResult> results = new CellTable<SolveResult>();
-		final Label errorLabel = new Label();
-
 		TextColumn<SolveResult> wordColumn = new TextColumn<SolveResult>() {
 			@Override
 			public String getValue(SolveResult object) {
@@ -75,9 +79,7 @@ public class WWFSolver2 implements EntryPoint
 		results.addColumn(lengthColumn, "Length");
 		results.addColumn(scoreColumn, "Score");
 		
-		ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
 		dataProvider.addDataDisplay(results);
-  	final List<SolveResult> resultList = dataProvider.getList();
   	
   	// Add a ColumnSortEvent.ListHandler to connect sorting to the
     // java.util.List.
@@ -97,7 +99,6 @@ public class WWFSolver2 implements EntryPoint
             return -1;
           }
         });
-    results.addColumnSortHandler(wordColumnSortHandler);
     
     ListHandler<SolveResult> lengthColumnSortHandler = new ListHandler<SolveResult>(
         resultList);
@@ -115,7 +116,6 @@ public class WWFSolver2 implements EntryPoint
             return -1;
           }
         });
-    results.addColumnSortHandler(lengthColumnSortHandler);
 
     ListHandler<SolveResult> scoreColumnSortHandler = new ListHandler<SolveResult>(
         resultList);
@@ -133,6 +133,9 @@ public class WWFSolver2 implements EntryPoint
             return -1;
           }
         });
+    
+    results.addColumnSortHandler(wordColumnSortHandler);
+    results.addColumnSortHandler(lengthColumnSortHandler);
     results.addColumnSortHandler(scoreColumnSortHandler);
     
     results.getColumnSortList().push(scoreColumn);
@@ -151,6 +154,7 @@ public class WWFSolver2 implements EntryPoint
 		RootPanel.get("sendButtonContainer").add(sendButton);
 		RootPanel.get("errorLabelContainer").add(errorLabel);
 		RootPanel.get("resultsContainer").add(results);
+		RootPanel.get("testResultsContainer").add(testResults);
 
 		// Focus the cursor on the name field when the app loads
 		rack.setFocus(true);
@@ -190,13 +194,12 @@ public class WWFSolver2 implements EntryPoint
 		// Create a handler for the sendButton and nameField
 		class SolveHandler implements ClickHandler, KeyUpHandler
 		{
-
 			/**
 			 * Fired when the user clicks on the sendButton.
 			 */
 			public void onClick(ClickEvent event)
 			{
-				sendNameToServer();
+				getAnagrams();
 			}
 
 			/**
@@ -206,41 +209,70 @@ public class WWFSolver2 implements EntryPoint
 			{
 				if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER)
 				{
-					sendNameToServer();
+					getAnagrams();
 				}
 			}
-
-			/**
-			 * Send the name from the nameField to the server and wait for a
-			 * response.
-			 */
-			private void sendNameToServer()
+		}
+		
+		class TestHandler implements KeyUpHandler
+		{
+			public void onKeyUp(KeyUpEvent event)
 			{
-		    // Set up the callback object.
-		    AsyncCallback<Result> callback = new AsyncCallback<Result>() {
-		      public void onFailure(Throwable caught) {
-		      	errorLabel.setText("failure!");
-		      }
-
-		      public void onSuccess(Result results) {
-		      	resultList.clear();
-		        resultList.addAll(results.getWords());
-		      }
-		    };
-
-		    // Make the call to the solve service.
-		    wwfSolveService.getResults(
-		    		rack.getText(),
-		    		start.getText(),
-		    		contains.getText(),
-		    		end.getText(),
-		    		callback);
+				testWord();
 			}
 		}
 		
 		// Add a handler to send the name to the server
-		SolveHandler handler = new SolveHandler();
-		sendButton.addClickHandler(handler);
-		rack.addKeyUpHandler(handler);
+		SolveHandler solveHandler = new SolveHandler();
+		TestHandler testHandler = new TestHandler();
+		sendButton.addClickHandler(solveHandler);
+		rack.addKeyUpHandler(solveHandler);
+		test.addKeyUpHandler(testHandler);
+	}
+	
+	/**
+	 * Send the name from the nameField to the server and wait for a
+	 * response.
+	 */
+	private void getAnagrams() {
+    // Set up the callback object.
+    AsyncCallback<Result> callback = new AsyncCallback<Result>() {
+      public void onFailure(Throwable caught) {
+      	errorLabel.setText("failure!");
+      }
+
+      public void onSuccess(Result results) {
+      	resultList.clear();
+        resultList.addAll(results.getWords());
+      }
+    };
+
+    // Make the call to the solve service.
+    wwfSolveService.findAnagrams(
+    		rack.getText(),
+    		start.getText(),
+    		contains.getText(),
+    		end.getText(),
+    		callback);
+	}
+	
+	private void testWord() {
+		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
+			public void onFailure(Throwable caught) {
+      	errorLabel.setText("failure!");
+      }
+
+      public void onSuccess(Result results) {
+      	if(results.getError()) {
+      		testResults.setText("That's not a word.");
+      	} else {
+      		testResults.setText(results.getQuery() + " is worth " + results.getWords().get(0).getScore() + " points!");
+      	}
+      }
+    };
+    
+    errorLabel.setText("");
+    testResults.setText("");
+    wwfWordTestService.testWord(test.getText(), callback);
 	}
 }

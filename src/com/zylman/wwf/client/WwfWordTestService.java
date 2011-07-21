@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.zylman.wwf.shared.Result;
 
-@RemoteServiceRelativePath("wwfSolve")
-public interface WwfSolveService extends RemoteService {
-	Result findAnagrams(String rack, String start, String contains, String end);
+@RemoteServiceRelativePath("wwfTest")
+public interface WwfWordTestService extends RemoteService {
+	Result testWord(String word);
 }

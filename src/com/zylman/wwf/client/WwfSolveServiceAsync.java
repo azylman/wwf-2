@@ -4,7 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.zylman.wwf.shared.Result;
 
 public interface WwfSolveServiceAsync {
-	void getResults(
+	void findAnagrams(
 			String rack,
 			String start,
 			String contains,
