@@ -230,10 +230,6 @@ public class WWFSolver2 implements EntryPoint
 		test.addKeyUpHandler(testHandler);
 	}
 	
-	/**
-	 * Send the name from the nameField to the server and wait for a
-	 * response.
-	 */
 	private void getAnagrams() {
     // Set up the callback object.
     AsyncCallback<Result> callback = new AsyncCallback<Result>() {
