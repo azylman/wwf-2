@@ -1,0 +1,69 @@
+<ui:UiBinder
+  xmlns:ui='urn:ui:com.google.gwt.uibinder'
+  xmlns:gwt='urn:import:com.google.gwt.user.client.ui'
+  xmlns:cell='urn:import:com.google.gwt.user.cellview.client'>
+  <ui:style field="css" src="main.css" />
+
+	<gwt:HTMLPanel styleName="{css.page}">
+		<gwt:HTMLPanel><h1>Words With Friends 2</h1></gwt:HTMLPanel>
+	
+		<gwt:HTMLPanel styleName="{css.column}">
+		<h2>Anagram Solver</h2>
+			
+			Requirements (* represents blank, can have up to two):<br/>
+			<gwt:Grid>
+			  <gwt:row>
+			    <gwt:cell>Rack:</gwt:cell>
+			    <gwt:customCell>
+			    	<gwt:TextBox ui:field="rack"></gwt:TextBox>
+			    </gwt:customCell>
+			  </gwt:row>
+			  <gwt:row>
+			    <gwt:cell>Starts with:</gwt:cell>
+			    <gwt:customCell>
+			    	<gwt:TextBox ui:field="start"></gwt:TextBox>
+			    </gwt:customCell>
+			  </gwt:row>
+			  <gwt:row>
+			    <gwt:cell>Contains:</gwt:cell>
+			    <gwt:customCell>
+			    	<gwt:TextBox ui:field="contains"></gwt:TextBox>
+			    </gwt:customCell>
+			  </gwt:row>
+			  <gwt:row>
+			    <gwt:cell>Ends with:</gwt:cell>
+			    <gwt:customCell>
+			    	<gwt:TextBox ui:field="end"></gwt:TextBox>
+			    </gwt:customCell>
+			  </gwt:row>
+			  <gwt:row>
+			    <gwt:customCell>
+			    	<gwt:Button ui:field="sendButton">Solve</gwt:Button>
+			    </gwt:customCell>
+			  </gwt:row>
+			  <gwt:row>
+			    <gwt:customCell>
+			    	<gwt:Label ui:field="errorLabel"></gwt:Label>
+			    </gwt:customCell>
+			  </gwt:row>
+			</gwt:Grid>
+			<cell:CellTable ui:field="results"></cell:CellTable>
+		</gwt:HTMLPanel>
+		
+		<gwt:HTMLPanel styleName="{css.column-spacer}"></gwt:HTMLPanel>
+		
+		<gwt:HTMLPanel styleName="{css.column}">
+			<h2>Word Value</h2>
+			<gwt:Grid>
+				<gwt:row>
+					<gwt:cell>Word:</gwt:cell>
+					<gwt:customCell>
+						<gwt:TextBox ui:field="test"></gwt:TextBox>
+					</gwt:customCell>
+				</gwt:row>
+			</gwt:Grid>
+			<br />
+			<gwt:Label ui:field="testResults"></gwt:Label>
+		</gwt:HTMLPanel>
+	</gwt:HTMLPanel>
+</ui:UiBinder>
