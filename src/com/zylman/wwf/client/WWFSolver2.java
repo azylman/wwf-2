@@ -10,6 +10,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.uibinder.client.UiBinder;
+import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -18,9 +20,10 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.zylman.wwf.shared.Result;
 import com.zylman.wwf.shared.SolveResult;
@@ -29,24 +32,30 @@ import com.zylman.wwf.shared.SolveResult;
  * Entry point classes define <code>onModuleLoad()</code>.
  */
 public class WWFSolver2 implements EntryPoint {
+	interface Binder extends UiBinder<Widget, WWFSolver2> { }
+	private static final Binder binder = GWT.create(Binder.class);
+
+	@UiField TextBox rack;
+	@UiField TextBox start;
+	@UiField TextBox contains;
+	@UiField TextBox end;
+	@UiField Button sendButton;
+	@UiField Label errorLabel;
+	@UiField CellTable<SolveResult> results;
+	@UiField TextBox test;
+	@UiField Label testResults;
+
 	private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
 	private final WwfWordTestServiceAsync wwfWordTestService = GWT.create(WwfWordTestService.class);
-	final Button sendButton = new Button("Submit");
-	final TextBox rack = new TextBox();
-	final TextBox start = new TextBox();
-	final TextBox contains = new TextBox();
-	final TextBox end = new TextBox();
-	final TextBox test = new TextBox();
-	final CellTable<SolveResult> results = new CellTable<SolveResult>();
-	final Label errorLabel = new Label();
 	final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
 	final List<SolveResult> resultList = dataProvider.getList();
-	final Label testResults = new Label();
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
+		Widget ui = binder.createAndBindUi(this);
+
 		TextColumn<SolveResult> wordColumn = new TextColumn<SolveResult>() {
 			@Override public String getValue(SolveResult object) {
 				return object.getWord();
@@ -122,18 +131,6 @@ public class WWFSolver2 implements EntryPoint {
 		// We can add style names to widgets
 		sendButton.addStyleName("sendButton");
 
-		// Add the nameField and sendButton to the RootPanel
-		// Use RootPanel.get() to get the entire body element
-		RootPanel.get("rackContainer").add(rack);
-		RootPanel.get("startContainer").add(start);
-		RootPanel.get("containsContainer").add(contains);
-		RootPanel.get("endContainer").add(end);
-		RootPanel.get("testContainer").add(test);
-		RootPanel.get("sendButtonContainer").add(sendButton);
-		RootPanel.get("errorLabelContainer").add(errorLabel);
-		RootPanel.get("resultsContainer").add(results);
-		RootPanel.get("testResultsContainer").add(testResults);
-
 		// Focus the cursor on the name field when the app loads
 		rack.setFocus(true);
 		rack.selectAll();
@@ -183,6 +180,8 @@ public class WWFSolver2 implements EntryPoint {
 				testWord();
 			}
 		}
+
+		RootLayoutPanel.get().add(ui);
 
 		// Add a handler to send the name to the server
 		SolveHandler solveHandler = new SolveHandler();

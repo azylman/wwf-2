@@ -19,17 +19,12 @@
 	<!--                                           -->
 	<title>Words With Friends Resources</title>
 	
-	   <!--                                           -->
+	<!--                                           -->
 	<!-- This script loads your compiled module.   -->
 	<!-- If you add any GWT meta tags, they must   -->
 	<!-- be added before this line.                -->
 	<!--                                           -->
 	<script type="text/javascript" src="wwfsolver2/wwfsolver2.nocache.js"></script>
-	<link type="text/css" rel="stylesheet" href="/css/main.css"></link>
-	<link type="text/css" rel="stylesheet" href="/css/sunny/jquery-ui-1.8.10.custom.css"></link>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/jquery-ui.js"></script>
-	<script type="text/javascript" src="/js/main.js"></script>
 	<script type="text/javascript">
 		
 		var _gaq = _gaq || [];
@@ -45,66 +40,4 @@
 	</script>
 
 </head>
-
-  <!--                                           -->
-  <!-- The body can have arbitrary html, or      -->
-  <!-- you can leave the body empty if you want  -->
-  <!-- to create a completely dynamic UI.        -->
-  <!--                                           -->
-  <body>
-
-    <!-- OPTIONAL: include this if you want history support -->
-    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
-    
-    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
-    <noscript>
-      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-        Your web browser must have JavaScript enabled
-        in order for this application to display correctly.
-      </div>
-    </noscript>
-	<div id="page">
-		<div id="header"><h1>Words With Friends</h1></div>
-	
-		<div class="column">
-		<h2>Anagram Solver</h2>
-			
-			Requirements (* represents blank, can have up to two):<br/>
-			<table>
-			  <tr>
-			    <td>Rack:</td><td id="rackContainer"></td>
-			  </tr>
-			  <tr>
-			    <td>Starts with:</td><td id="startContainer"></td>
-			  </tr>
-			  <tr>
-			    <td>Contains:</td><td id="containsContainer"></td>
-			  </tr>
-			  <tr>
-			    <td>Ends with:</td><td id="endContainer"></td>
-			  </tr>
-			  <tr>
-			    <td id="sendButtonContainer"></td>
-			  </tr>
-			  <tr>
-			    <td colspan="2" style="color:red;" id="errorLabelContainer"></td>
-			  </tr>
-			</table>
-			<div id="resultsContainer"></div>
-			<br />
-		</div>
-		<div class="column-spacer"></div>
-		<div class="column">
-			<h2>Word Value</h2>
-			
-			<table>
-				<tr>
-					<td>Word:</td><td id="testContainer"></td>
-				</tr>
-			</table>
-			<br />
-			<div id="testResultsContainer"></div>
-		</div>
-	</div>
-	</body>
 </html>
