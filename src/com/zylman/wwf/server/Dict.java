@@ -18,7 +18,6 @@ public class Dict {
 
 	@SuppressWarnings("serial")
 	private static final Hashtable<Character, Integer> scores = new Hashtable<Character, Integer>() {
-
 		{
 			put('a', 1);
 			put('b', 4);
