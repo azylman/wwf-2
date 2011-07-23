@@ -3,3 +3,4 @@ test-classes/*
 war/wwfsolver2
 war/wwfsolver2/*
 war/WEB-INF/classes/*
+.gwt/.gwt-log
