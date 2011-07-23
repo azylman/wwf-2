@@ -30,3 +30,7 @@ h1 {
 	width: 10%;
 	height: 10px;
 }
+
+.red-box {
+	background-color: #FF0000;
+}

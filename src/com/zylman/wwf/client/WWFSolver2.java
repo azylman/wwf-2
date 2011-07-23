@@ -1,5 +1,7 @@
 package com.zylman.wwf.client;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
@@ -8,12 +10,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Label;
@@ -43,15 +48,52 @@ public class WWFSolver2 implements EntryPoint {
 
 	private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
 	private final WwfWordTestServiceAsync wwfWordTestService = GWT.create(WwfWordTestService.class);
-	final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
-	final List<SolveResult> resultList = dataProvider.getList();
+	private final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
+	private final List<SolveResult> resultList = dataProvider.getList();
 
 	/**
 	 * This is the entry point method.
 	 */
 	public void onModuleLoad() {
 		Widget ui = binder.createAndBindUi(this);
+		
+		// Focus the cursor on the name field when the app loads
+		rack.setFocus(true);
 
+		RootLayoutPanel.get().add(ui);
+		initializeColumns();
+		
+    History.addValueChangeHandler(getHistoryHandler());
+    
+    History.fireCurrentHistoryState();
+	}
+	
+	private ValueChangeHandler<String> getHistoryHandler() {
+		return new ValueChangeHandler<String>() {
+      public void onValueChange(ValueChangeEvent<String> event) {
+        String historyToken = event.getValue();
+        ArrayList<String> tokens = new ArrayList<String>(Arrays.asList(historyToken.split("/")));
+        if (tokens.get(0).equals("test")) {
+        	test.setText(tokens.get(1));
+        	testWord();
+        } else if (tokens.get(0).equals("solve")) {
+        	rack.setText(tokens.get(1));
+        	if (!tokens.get(2).equals("!")) {
+        		start.setText(tokens.get(2));
+        	}
+        	if (!tokens.get(3).equals("!")) {
+        		contains.setText(tokens.get(3));
+        	}
+        	if (!tokens.get(4).equals("!")) {
+        		end.setText(tokens.get(4));
+        	}
+        	getAnagrams();
+        }
+      }
+    };
+	}
+	
+	private void initializeColumns() {
 		TextColumn<SolveResult> wordColumn = new TextColumn<SolveResult>() {
 			@Override public String getValue(SolveResult object) {
 				return object.getWord();
@@ -67,15 +109,12 @@ public class WWFSolver2 implements EntryPoint {
 				return object.getLength().toString();
 			}
 		};
-
 		wordColumn.setSortable(true);
 		scoreColumn.setSortable(true);
 		lengthColumn.setSortable(true);
 		results.addColumn(wordColumn, "Word");
 		results.addColumn(lengthColumn, "Length");
 		results.addColumn(scoreColumn, "Score");
-		dataProvider.addDataDisplay(results);
-
 		// Add a ColumnSortEvent.ListHandler to connect sorting to the
 		// java.util.List.
 		ListHandler<SolveResult> wordColumnSortHandler = new ListHandler<SolveResult>(resultList);
@@ -123,11 +162,8 @@ public class WWFSolver2 implements EntryPoint {
 		results.addColumnSortHandler(scoreColumnSortHandler);
 		results.getColumnSortList().push(scoreColumn);
 		results.setPageSize(999999);
-
-		// Focus the cursor on the name field when the app loads
-		rack.setFocus(true);
-
-		RootLayoutPanel.get().add(ui);
+		
+		dataProvider.addDataDisplay(results);
 	}
 
 	@UiHandler("sendButton")
@@ -161,10 +197,16 @@ public class WWFSolver2 implements EntryPoint {
 			public void onSuccess(Result results) {
 				resultList.clear();
 				resultList.addAll(results.getWords());
+				History.newItem(
+						"solve/" + rack.getText()
+						+ "/" + (start.getText().isEmpty() ? "!" : start.getText())
+						+ "/" + (contains.getText().isEmpty() ? "!" : contains.getText())
+						+ "/" + (end.getText().isEmpty() ? "!" : end.getText()));
 			}
 		};
 		// Make the call to the solve service.
-		wwfSolveService.findAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText(), callback);
+		wwfSolveService.findAnagrams(
+				rack.getText(), start.getText(), contains.getText(), end.getText(), callback);
 	}
 
 	private void testWord() {
@@ -174,10 +216,12 @@ public class WWFSolver2 implements EntryPoint {
 			}
 
 			public void onSuccess(Result results) {
+				History.newItem("test/" + test.getText());
 				if (results.getError()) {
 					testResults.setText("That's not a word.");
 				} else {
-					testResults.setText(results.getQuery() + " is worth " + results.getWords().get(0).getScore() + " points!");
+					testResults.setText(
+							results.getQuery() + " is worth " + results.getWords().get(0).getScore() + " points!");
 				}
 			}
 		};

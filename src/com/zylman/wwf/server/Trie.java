@@ -5,16 +5,14 @@ import java.util.Iterator;
 
 public class Trie {
 	protected LinkedHashMap<Character, Trie> children = new LinkedHashMap<Character, Trie>();
-	public String word = "";
-
-	public int size = 0;
-
+	protected String word = "";
+	protected int size = 0;
+	
 	public Trie() {
 	}
 
 	public Trie(Trie oldTrie) {
 		word = oldTrie.word;
-		// children = (LinkedHashMap< Character, Trie >)oldTrie.children.clone();
 		children = new LinkedHashMap<Character, Trie>(oldTrie.children);
 	}
 
@@ -22,7 +20,6 @@ public class Trie {
 		Trie newTrie = new Trie();
 		newTrie.word = word;
 
-		// Iterator it = children.keySet().iterator();
 		Iterator<Character> it = children.keySet().iterator();
 		while (it.hasNext()) {
 			Character key = (Character) it.next();
@@ -51,6 +48,14 @@ public class Trie {
 			temp = temp.addBranch(word.charAt(i));
 		}
 
-		temp.word = word;
+		temp.setWord(word);
+	}
+	
+	public String getWord() {
+		return word;
+	}
+	
+	public void setWord(String word) {
+		this.word = word;
 	}
 }

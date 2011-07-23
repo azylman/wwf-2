@@ -9,10 +9,9 @@ import java.util.SortedSet;
 
 import com.zylman.wwf.shared.SolveResult;
 
-// HOW TO IMPROVE FURTHER:
-//	1. Persist the Trie and pull it out of persistence storage when the instance is spun up.
 public class Dict {
-
+	private Trie wordList = new Trie();
+	
 	@SuppressWarnings("serial")
 	private static final Hashtable<Character, Integer> scores = new Hashtable<Character, Integer>() {
 		{
@@ -53,8 +52,6 @@ public class Dict {
 		return sum;
 	}
 
-	Trie wordList = new Trie();
-
 	public Dict(String fileName) {
 		try {
 			String line = "non-null";
@@ -85,8 +82,8 @@ public class Dict {
 
 		Trie endNode = getNode(end, node);
 
-		if (endNode != null && contains.isEmpty() && !endNode.word.isEmpty()) {
-			results.add(new SolveResult(endNode.word, score(endNode.word)));
+		if (endNode != null && contains.isEmpty() && !endNode.getWord().isEmpty()) {
+			results.add(new SolveResult(endNode.getWord(), score(endNode.getWord())));
 		}
 
 		for (int i = 0; i < word.length(); i++) {
@@ -149,7 +146,7 @@ public class Dict {
 
 	public boolean isWord(String word) {
 		Trie result = getNode(word.toLowerCase(), wordList);
-		return result == null ? false : !result.word.isEmpty();
+		return result == null ? false : !result.getWord().isEmpty();
 	}
 
 	public Trie getNode(String word, Trie node) {
