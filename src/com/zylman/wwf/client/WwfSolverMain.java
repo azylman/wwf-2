@@ -32,8 +32,8 @@ import com.zylman.wwf.shared.SolveResult;
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class WWFSolver2 implements EntryPoint {
-	interface Binder extends UiBinder<Widget, WWFSolver2> { }
+public class WwfSolverMain implements EntryPoint {
+	interface Binder extends UiBinder<Widget, WwfSolverMain> { }
 	private static final Binder binder = GWT.create(Binder.class);
 
 	@UiField TextBox rack;
