@@ -1,5 +1,6 @@
-#Tue Jul 19 21:10:35 MDT 2011
+#Sat Jul 23 16:19:35 MDT 2011
 eclipse.preferences.version=1
+jarsExcludedFromWebInfLib=/Users/azylman/Documents/Projects/wwf/wwf/lib/junit-4.9b3.jar
 launchConfigExternalUrlPrefix=
 warSrcDir=war
 warSrcDirIsOutput=true
