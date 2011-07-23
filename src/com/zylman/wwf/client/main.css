@@ -1,46 +1,32 @@
 body {
 	font-family: Verdana, Helvetica, sans-serif;
 	background-color: #FFFFF5;
-	margin:0;
-	padding:0;
-	width:1100px;
+	margin: 0;
+	padding: 0;
 }
 
 .page {
-	width:1100px;
-	margin-left:100px;
-	margin-top:50px;
+	margin-left: 5%;
+	margin-right: 5%;
+	margin-top: 50px;
 }
 
 div {
-	margin:0;
-	padding:0;
-}
-
-.help {
-	position:relative;
-	font-size: .6em;
-	align:middle;
-	display:inline;
-	vertical-align:middle;
-	top: -.3em;
+	margin: 0;
+	padding: 0;
 }
 
 h1 {
-	text-align:center;
+	text-align: center;
 }
 
 .column {
-	float:left;
-	width:500px;
+	float: left;
+	width: 40%;
 }
 
 .column-spacer {
-	float:left;
-	width:100px;
-	height:10px;
-}
-
-#left-col {
-	margin-right:50px;
+	float: left;
+	width: 10%;
+	height: 10px;
 }
