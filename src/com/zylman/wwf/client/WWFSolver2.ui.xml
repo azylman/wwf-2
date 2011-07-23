@@ -8,6 +8,7 @@
 	<gwt:HTMLPanel><h1>Words With Friends</h1></gwt:HTMLPanel>
 
 	<gwt:HTMLPanel styleName="{css.column}">
+	<gwt:HTMLPanel styleName="{css.centered}">
 	<gwt:HTMLPanel><h2>Anagram Solver</h2></gwt:HTMLPanel>
 		
 		<gwt:Label>Requirements (* represents blank, can have up to two):</gwt:Label>
@@ -48,6 +49,7 @@
 		  </gwt:row>
 		</gwt:Grid>
 		<cell:CellTable ui:field="results"></cell:CellTable>
+	</gwt:HTMLPanel>
 	</gwt:HTMLPanel>
 	
 	<gwt:HTMLPanel styleName="{css.column-spacer}"></gwt:HTMLPanel>

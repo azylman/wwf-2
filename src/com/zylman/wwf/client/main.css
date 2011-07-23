@@ -31,6 +31,7 @@ h1 {
 	height: 10px;
 }
 
-.red-box {
-	background-color: #FF0000;
+.centered {
+	margin-left: auto;
+	margin-right: auto;
 }
