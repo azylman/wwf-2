@@ -1,4 +1,2 @@
 # Module wwfsolver2
 # RPC service class, partial path of RPC policy file
-com.zylman.wwf.client.WwfSolveService, 5791A528FB9FAED170A53BB336619D57.gwt.rpc
-com.zylman.wwf.client.WwfWordTestService, 5078647A38CA3FB7EDFFB12843794A66.gwt.rpc
