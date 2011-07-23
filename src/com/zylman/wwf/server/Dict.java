@@ -10,10 +10,7 @@ import java.util.SortedSet;
 import com.zylman.wwf.shared.SolveResult;
 
 // HOW TO IMPROVE FURTHER:
-//	1. Sort words before they're added to the dictionary and then turn the "words" string to a list.
-//		This way, all anagrams (so all words you can make) are at the same location - e.g., dog and god
-//	2. Serialize the Trie structure, and then just read it out of the static file instead of
-//		needing to recompute the whole structure
+//	1. Persist the Trie and pull it out of persistence storage when the instance is spun up.
 public class Dict {
 
 	@SuppressWarnings("serial")
@@ -64,26 +61,24 @@ public class Dict {
 			BufferedReader fileIn = new BufferedReader(new FileReader(fileName));
 			try {
 				line = fileIn.readLine();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				System.out.println("I/O Exception: " + e.getMessage());
 			}
 			while (line != null) {
 				try {
 					wordList.addWord(line);
 					line = fileIn.readLine();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					System.out.println("I/O Exception: " + e.getMessage());
 				}
 			}
-		}
-		catch (FileNotFoundException e) {
+		} catch (FileNotFoundException e) {
 			System.out.println("File Not Found: " + e.getMessage());
 		}
 	}
 
-	protected boolean wordSearch(String word, String contains, String end, SortedSet<SolveResult> results, Trie node) {
+	protected boolean wordSearch(String word, String contains, String end,
+			SortedSet<SolveResult> results, Trie node) {
 		if (node == null) {
 			return false;
 		}
@@ -97,7 +92,8 @@ public class Dict {
 		for (int i = 0; i < word.length(); i++) {
 			Character ch = word.charAt(i);
 			if (ch == '*') {
-				String newWord = word.substring(0, i).concat(word.substring(i + 1));
+				String newWord = word.substring(0, i).concat(
+						word.substring(i + 1));
 
 				wordSearch(newWord, contains, end, results, node.next('a'));
 				wordSearch(newWord, contains, end, results, node.next('b'));
@@ -125,9 +121,9 @@ public class Dict {
 				wordSearch(newWord, contains, end, results, node.next('x'));
 				wordSearch(newWord, contains, end, results, node.next('y'));
 				wordSearch(newWord, contains, end, results, node.next('z'));
-			}
-			else {
-				String newWord = word.substring(0, i).concat(word.substring(i + 1));
+			} else {
+				String newWord = word.substring(0, i).concat(
+						word.substring(i + 1));
 				wordSearch(newWord, contains, end, results, node.next(ch));
 			}
 		}
@@ -139,14 +135,16 @@ public class Dict {
 		return false;
 	}
 
-	public void solve(String word, String start, String contains, String end, SortedSet<SolveResult> results) {
+	public void solve(String word, String start, String contains, String end,
+			SortedSet<SolveResult> results) {
 		Trie node = getNode(start.toLowerCase(), wordList);
 
 		if (node == null) {
 			return;
 		}
 
-		wordSearch(word.toLowerCase(), contains.toLowerCase(), end.toLowerCase(), results, node);
+		wordSearch(word.toLowerCase(), contains.toLowerCase(),
+				end.toLowerCase(), results, node);
 	}
 
 	public boolean isWord(String word) {
