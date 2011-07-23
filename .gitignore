@@ -1,3 +1,5 @@
-test-class/*
-war/wwfsolver2/wwfsolver2.nocache.js
+test-classes
+test-classes/*
+war/wwfsolver2
+war/wwfsolver2/*
 war/WEB-INF/classes/*
