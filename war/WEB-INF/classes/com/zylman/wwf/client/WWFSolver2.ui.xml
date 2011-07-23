@@ -8,9 +8,9 @@
 	<gwt:HTMLPanel><h1>Words With Friends</h1></gwt:HTMLPanel>
 
 	<gwt:HTMLPanel styleName="{css.column}">
-	<h2>Anagram Solver</h2>
+	<gwt:HTMLPanel><h2>Anagram Solver</h2></gwt:HTMLPanel>
 		
-		Requirements (* represents blank, can have up to two):<br/>
+		<gwt:Label>Requirements (* represents blank, can have up to two):</gwt:Label>
 		<gwt:Grid>
 		  <gwt:row>
 		    <gwt:cell>Rack:</gwt:cell>
@@ -53,7 +53,7 @@
 	<gwt:HTMLPanel styleName="{css.column-spacer}"></gwt:HTMLPanel>
 	
 	<gwt:HTMLPanel styleName="{css.column}">
-		<h2>Word Value</h2>
+		<gwt:HTMLPanel><h2>Word Value</h2></gwt:HTMLPanel>
 		<gwt:Grid>
 			<gwt:row>
 				<gwt:cell>Word:</gwt:cell>
