@@ -183,6 +183,27 @@ public class WwfSolverMain implements EntryPoint {
 			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
 		}
 	}
+	
+	@UiHandler("start")
+	void handleStartKeyUp(KeyUpEvent event) {
+		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+		}
+	}
+	
+	@UiHandler("contains")
+	void handleContainsKeyUp(KeyUpEvent event) {
+		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+		}
+	}
+	
+	@UiHandler("end")
+	void handleEndKeyUp(KeyUpEvent event) {
+		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+		}
+	}
 
 	@UiHandler("test")
 	void handleTestKeyUp(KeyUpEvent event) {
@@ -216,7 +237,37 @@ public class WwfSolverMain implements EntryPoint {
 			}
 		};
 		// Make the call to the solve service.
-		wwfSolveService.findAnagrams(rack, start, contains, end, callback);
+		if (validateRack(rack)
+				&& validateOther(start)
+				&& validateOther(contains)
+				&& validateOther(end)) {
+			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
+		} else {
+			errorLabel.setText("Invalid query");
+		}
+	}
+	
+	private boolean validateRack(String word) {
+		int wildcardCount = 0;
+		for (int i = 0; i < word.length(); ++i) {
+			Character c = word.charAt(i);
+			if (c.equals('*')) {
+				wildcardCount++;
+			} else if (!Character.isLetter(c)) {
+				return false;
+			}
+		}
+		return wildcardCount < 3 && word.length() < 10;
+	}
+	
+	private boolean validateOther(String word) {
+		for (int i = 0; i < word.length(); ++i) {
+			Character c = word.charAt(i);
+			if (!Character.isLetter(c)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private void testWord(final String word) {
