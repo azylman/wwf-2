@@ -10,14 +10,9 @@ public class WwfWordTestServiceImpl extends RemoteServiceServlet implements WwfW
 		Dict dict = DictWrapper.get();
 
 		if (word != null && !word.isEmpty() && dict.isWord(word)) {
-			Result r = new Result(word);
-			r.add(word, Dict.score(word));
-			r.setError(false);
-			return r;
+			return new Result(word).add(word, Dict.score(word));
 		} else {
-			Result r = new Result();
-			r.setError(true);
-			return r;
+			return new Result().setError(true);
 		}
 	}
 }

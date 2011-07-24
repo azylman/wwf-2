@@ -26,6 +26,7 @@ import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
+import com.zylman.wwf.shared.InputValidator;
 import com.zylman.wwf.shared.Result;
 import com.zylman.wwf.shared.SolveResult;
 
@@ -232,43 +233,24 @@ public class WwfSolverMain implements EntryPoint {
 			}
 
 			public void onSuccess(Result results) {
-				errorLabel.setText("");
-				resultList.clear();
-				resultList.addAll(results.getWords());
+				if (results.getError()) {
+					errorLabel.setText("Invalid query");
+				} else {
+					errorLabel.setText("");
+					resultList.clear();
+					resultList.addAll(results.getWords());
+				}
 			}
 		};
 		// Make the call to the solve service.
-		if (validateRack(rack)
-				&& validateOther(start)
-				&& validateOther(contains)
-				&& validateOther(end)) {
+		if (InputValidator.validateRack(rack)
+				&& InputValidator.validateOther(start)
+				&& InputValidator.validateOther(contains)
+				&& InputValidator.validateOther(end)) {
 			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
 		} else {
 			errorLabel.setText("Invalid query");
 		}
-	}
-	
-	private boolean validateRack(String word) {
-		int wildcardCount = 0;
-		for (int i = 0; i < word.length(); ++i) {
-			Character c = word.charAt(i);
-			if (c.equals('*')) {
-				wildcardCount++;
-			} else if (!Character.isLetter(c)) {
-				return false;
-			}
-		}
-		return wildcardCount < 3 && word.length() < 10;
-	}
-	
-	private boolean validateOther(String word) {
-		for (int i = 0; i < word.length(); ++i) {
-			Character c = word.charAt(i);
-			if (!Character.isLetter(c)) {
-				return false;
-			}
-		}
-		return true;
 	}
 
 	private void testWord(final String word) {
