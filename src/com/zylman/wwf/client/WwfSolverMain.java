@@ -74,24 +74,20 @@ public class WwfSolverMain implements EntryPoint {
         String historyToken = event.getValue();
         ArrayList<String> tokens = new ArrayList<String>(Arrays.asList(historyToken.split("/")));
         if (tokens.get(0).equals("test")) {
-        	if(tokens.size() == 2) {
-        		test.setText(tokens.get(1));
-        		testWord();
-        	}
+        	test.setText(tokens.get(1));
+        	testWord();
         } else if (tokens.get(0).equals("solve")) {
-        	if(tokens.size() == 5) {
-        		rack.setText(tokens.get(1));
-        		if (!tokens.get(2).equals("!")) {
-        			start.setText(tokens.get(2));
-        		}
-        		if (!tokens.get(3).equals("!")) {
-        			contains.setText(tokens.get(3));
-        		}
-        		if (!tokens.get(4).equals("!")) {
-        			end.setText(tokens.get(4));
-        		}
-        		getAnagrams();
+        	rack.setText(tokens.get(1));
+        	if (!tokens.get(2).equals("!")) {
+        		start.setText(tokens.get(2));
         	}
+        	if (!tokens.get(3).equals("!")) {
+        		contains.setText(tokens.get(3));
+        	}
+        	if (!tokens.get(4).equals("!")) {
+        		end.setText(tokens.get(4));
+        	}
+        	getAnagrams();
         }
       }
     };
