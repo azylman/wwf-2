@@ -10,10 +10,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -92,7 +90,7 @@ public class WwfSolverMain implements EntryPoint {
         		if (!tokens.get(4).equals("!")) {
         			end.setText(tokens.get(4));
         		}
-        		sendButton.click();
+        		getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
         	}
         }
       }
@@ -172,36 +170,44 @@ public class WwfSolverMain implements EntryPoint {
 		dataProvider.addDataDisplay(results);
 	}
 
+	private void setSolveHistory() {
+		History.newItem(
+				"solve/" + rack.getText()
+				+ "/" + (start.getText().isEmpty() ? "!" : start.getText())
+				+ "/" + (contains.getText().isEmpty() ? "!" : contains.getText())
+				+ "/" + (end.getText().isEmpty() ? "!" : end.getText()));
+	}
+	
 	@UiHandler("sendButton")
 	void handleClick(ClickEvent e) {
-		getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+		setSolveHistory();
 	}
 
 	@UiHandler("rack")
 	void handleRackKeyUp(KeyUpEvent event) {
 		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("start")
 	void handleStartKeyUp(KeyUpEvent event) {
 		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("contains")
 	void handleContainsKeyUp(KeyUpEvent event) {
 		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("end")
 	void handleEndKeyUp(KeyUpEvent event) {
 		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
+			setSolveHistory();
 		}
 	}
 
@@ -212,8 +218,8 @@ public class WwfSolverMain implements EntryPoint {
 		} else {
 			errorLabel.setText("");
 			testResults.setText("");
-			testWord(test.getText());
 		}
+		History.newItem("test/" + test.getText());
 	}
 
 	private void getAnagrams(
@@ -229,11 +235,6 @@ public class WwfSolverMain implements EntryPoint {
 				errorLabel.setText("");
 				resultList.clear();
 				resultList.addAll(results.getWords());
-				History.newItem(
-						"solve/" + rack
-						+ "/" + (start.isEmpty() ? "!" : start)
-						+ "/" + (contains.isEmpty() ? "!" : contains)
-						+ "/" + (end.isEmpty() ? "!" : end));
 			}
 		};
 		// Make the call to the solve service.
@@ -277,7 +278,6 @@ public class WwfSolverMain implements EntryPoint {
 			}
 
 			public void onSuccess(Result results) {
-				History.newItem("test/" + word);
 				if (results.getError()) {
 					testResults.setText("That's not a word.");
 				} else {
