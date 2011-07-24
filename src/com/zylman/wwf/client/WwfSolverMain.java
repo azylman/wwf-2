@@ -10,8 +10,10 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.event.shared.GwtEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -76,7 +78,7 @@ public class WwfSolverMain implements EntryPoint {
         if (tokens.get(0).equals("test")) {
         	if(tokens.size() == 2) {
         		test.setText(tokens.get(1));
-        		testWord();
+        		testWord(test.getText());
         	}
         } else if (tokens.get(0).equals("solve")) {
         	if(tokens.size() == 5) {
@@ -90,7 +92,7 @@ public class WwfSolverMain implements EntryPoint {
         		if (!tokens.get(4).equals("!")) {
         			end.setText(tokens.get(4));
         		}
-        		getAnagrams();
+        		sendButton.click();
         	}
         }
       }
@@ -172,13 +174,13 @@ public class WwfSolverMain implements EntryPoint {
 
 	@UiHandler("sendButton")
 	void handleClick(ClickEvent e) {
-		getAnagrams();
+		getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
 	}
 
 	@UiHandler("rack")
 	void handleRackKeyUp(KeyUpEvent event) {
 		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			getAnagrams();
+			getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
 		}
 	}
 
@@ -187,50 +189,52 @@ public class WwfSolverMain implements EntryPoint {
 		if (test.getText().isEmpty()) {
 			testResults.setText("");
 		} else {
-			testWord();
+			errorLabel.setText("");
+			testResults.setText("");
+			testWord(test.getText());
 		}
 	}
 
-	private void getAnagrams() {
+	private void getAnagrams(
+			final String rack, final String start, final String contains, final String end) {
 		// Set up the callback object.
+		errorLabel.setText("Loading...");
 		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
 			public void onFailure(Throwable caught) {
 				errorLabel.setText("failure!");
 			}
 
 			public void onSuccess(Result results) {
+				errorLabel.setText("");
 				resultList.clear();
 				resultList.addAll(results.getWords());
 				History.newItem(
-						"solve/" + rack.getText()
-						+ "/" + (start.getText().isEmpty() ? "!" : start.getText())
-						+ "/" + (contains.getText().isEmpty() ? "!" : contains.getText())
-						+ "/" + (end.getText().isEmpty() ? "!" : end.getText()));
+						"solve/" + rack
+						+ "/" + (start.isEmpty() ? "!" : start)
+						+ "/" + (contains.isEmpty() ? "!" : contains)
+						+ "/" + (end.isEmpty() ? "!" : end));
 			}
 		};
 		// Make the call to the solve service.
-		wwfSolveService.findAnagrams(
-				rack.getText(), start.getText(), contains.getText(), end.getText(), callback);
+		wwfSolveService.findAnagrams(rack, start, contains, end, callback);
 	}
 
-	private void testWord() {
+	private void testWord(final String word) {
 		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
 			public void onFailure(Throwable caught) {
 				errorLabel.setText("failure!");
 			}
 
 			public void onSuccess(Result results) {
-				History.newItem("test/" + test.getText());
+				History.newItem("test/" + word);
 				if (results.getError()) {
 					testResults.setText("That's not a word.");
 				} else {
 					testResults.setText(
-							results.getQuery() + " is worth " + results.getWords().get(0).getScore() + " points!");
+							word + " is worth " + results.getWords().get(0).getScore() + " points!");
 				}
 			}
 		};
-		errorLabel.setText("");
-		testResults.setText("");
-		wwfWordTestService.testWord(test.getText(), callback);
+		wwfWordTestService.testWord(word, callback);
 	}
 }
