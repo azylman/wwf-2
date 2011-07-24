@@ -5,3 +5,5 @@ war/wwfsolver2/*
 war/WEB-INF/classes/*
 .gwt/.gwt-log
 war/WEB-INF/appengine-generated/local_db.bin
+war/WEB-INF/deploy
+war/WEB-INF/deploy/*
