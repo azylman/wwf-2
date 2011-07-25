@@ -1,42 +1,37 @@
 package com.zylman.wwf.client;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.uibinder.client.UiTemplate;
 import com.google.gwt.user.cellview.client.CellTable;
 import com.google.gwt.user.cellview.client.ColumnSortEvent.ListHandler;
 import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.ListDataProvider;
 import com.zylman.wwf.shared.InputValidator;
-import com.zylman.wwf.shared.Result;
 import com.zylman.wwf.shared.SolveResult;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>.
  */
-public class WwfSolverMain implements EntryPoint {
-	interface Binder extends UiBinder<Widget, WwfSolverMain> { }
-	private static final Binder binder = GWT.create(Binder.class);
-
+public class WwfSolverView extends Composite {
+	@UiTemplate("WwfSolver.ui.xml")
+	interface Binder extends UiBinder<Widget, WwfSolverView> { }
+	private static final Binder binder = GWT.create(Binder.class); 
+	
 	@UiField TextBox rack;
 	@UiField TextBox start;
 	@UiField TextBox contains;
@@ -46,57 +41,21 @@ public class WwfSolverMain implements EntryPoint {
 	@UiField CellTable<SolveResult> results;
 	@UiField TextBox test;
 	@UiField Label testResults;
+	
+	private final WwfSolverPresenter presenter;
 
-	private final WwfSolveServiceAsync wwfSolveService = GWT.create(WwfSolveService.class);
-	private final WwfWordTestServiceAsync wwfWordTestService = GWT.create(WwfWordTestService.class);
-	private final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
-	private final List<SolveResult> resultList = dataProvider.getList();
+	public final ListDataProvider<SolveResult> dataProvider = new ListDataProvider<SolveResult>();
+	public final List<SolveResult> resultList = dataProvider.getList();
 
-	/**
-	 * This is the entry point method.
-	 */
-	public void onModuleLoad() {
-		Widget ui = binder.createAndBindUi(this);
+	public WwfSolverView() {
+		initWidget(binder.createAndBindUi(this));
+		presenter = new WwfSolverPresenter(this);
 		
 		// Focus the cursor on the name field when the app loads
 		rack.setFocus(true);
 		sendButton.setWidth("100px");
 
-		RootLayoutPanel.get().add(ui);
 		initializeColumns();
-		
-    History.addValueChangeHandler(getHistoryHandler());
-    
-    History.fireCurrentHistoryState();
-	}
-	
-	private ValueChangeHandler<String> getHistoryHandler() {
-		return new ValueChangeHandler<String>() {
-      public void onValueChange(ValueChangeEvent<String> event) {
-        String historyToken = event.getValue();
-        ArrayList<String> tokens = new ArrayList<String>(Arrays.asList(historyToken.split("/")));
-        if (tokens.get(0).equals("test")) {
-        	if(tokens.size() == 2) {
-        		test.setText(tokens.get(1));
-        		testWord(test.getText());
-        	}
-        } else if (tokens.get(0).equals("solve")) {
-        	if(tokens.size() == 5) {
-        		rack.setText(tokens.get(1));
-        		if (!tokens.get(2).equals("!")) {
-        			start.setText(tokens.get(2));
-        		}
-        		if (!tokens.get(3).equals("!")) {
-        			contains.setText(tokens.get(3));
-        		}
-        		if (!tokens.get(4).equals("!")) {
-        			end.setText(tokens.get(4));
-        		}
-        		getAnagrams(rack.getText(), start.getText(), contains.getText(), end.getText());
-        	}
-        }
-      }
-    };
 	}
 	
 	private void initializeColumns() {
@@ -171,53 +130,43 @@ public class WwfSolverMain implements EntryPoint {
 		
 		dataProvider.addDataDisplay(results);
 	}
-
-	private void setSolveHistory() {
-		History.newItem(
-				"solve/" + rack.getText()
-				+ "/" + (start.getText().isEmpty() ? "!" : start.getText())
-				+ "/" + (contains.getText().isEmpty() ? "!" : contains.getText())
-				+ "/" + (end.getText().isEmpty() ? "!" : end.getText()));
-	}
 	
 	@UiHandler("sendButton")
 	void handleClick(ClickEvent e) {
-		setSolveHistory();
+		if (rack.getText().length() > 1) {
+			presenter.setSolveHistory(rack.getText(), start.getText(), contains.getText(), end.getText());
+		}
 	}
 
 	@UiHandler("rack")
 	void handleRackKeyUp(KeyUpEvent event) {
 		if (validateInput()
-				&& rack.getText().length() > 1
 				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			setSolveHistory();
+			sendButton.click();
 		}
 	}
 	
 	@UiHandler("start")
 	void handleStartKeyUp(KeyUpEvent event) {
 		if (validateInput()
-				&& rack.getText().length() > 1
 				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			setSolveHistory();
+			sendButton.click();
 		}
 	}
 	
 	@UiHandler("contains")
 	void handleContainsKeyUp(KeyUpEvent event) {
 		if (validateInput()
-				&& rack.getText().length() > 1
 				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			setSolveHistory();
+			sendButton.click();
 		}
 	}
 	
 	@UiHandler("end")
 	void handleEndKeyUp(KeyUpEvent event) {
 		if (validateInput()
-				&& rack.getText().length() > 1
 				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-			setSolveHistory();
+			sendButton.click();
 		}
 	}
 
@@ -232,7 +181,7 @@ public class WwfSolverMain implements EntryPoint {
 		History.newItem("test/" + test.getText());
 	}
 	
-	private boolean validateInput() {
+	public boolean validateInput() {
 		if (!InputValidator.validateRack(rack.getText())) {
 			errorLabel.setText("Invalid query. The rack may only contain letters and up to two wildcards,"
 					+ " to a maximum of 10 characters.");
@@ -247,49 +196,13 @@ public class WwfSolverMain implements EntryPoint {
 		errorLabel.setText("");
 		return true;
 	}
-
-	private void getAnagrams(
-			final String rack, final String start, final String contains, final String end) {
-		// Set up the callback object.
-		errorLabel.setText("Loading...");
-		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
-			public void onFailure(Throwable caught) {
-				errorLabel.setText("failure!");
-			}
-
-			public void onSuccess(Result results) {
-				if (results.getError()) {
-					errorLabel.setText("Invalid query. You may only have letters and wildcard characters. "
-							+ "Wildcard characters may only be placed in the rack and there can be a maximum of 10 "
-							+ "characters.");
-				} else {
-					errorLabel.setText("");
-					resultList.clear();
-					resultList.addAll(results.getWords());
-				}
-			}
-		};
-		// Make the call to the solve service.
-		if (validateInput()) {
-			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
-		}
+	
+	public void setError(String error) {
+		errorLabel.setText(error);
 	}
-
-	private void testWord(final String word) {
-		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
-			public void onFailure(Throwable caught) {
-				errorLabel.setText("failure!");
-			}
-
-			public void onSuccess(Result results) {
-				if (results.getError()) {
-					testResults.setText("That's not a word.");
-				} else {
-					testResults.setText(
-							word + " is worth " + results.getWords().get(0).getScore() + " points!");
-				}
-			}
-		};
-		wwfWordTestService.testWord(word, callback);
+	
+	public void setResults(List<SolveResult> results) {
+		resultList.clear();
+		resultList.addAll(results);
 	}
 }
