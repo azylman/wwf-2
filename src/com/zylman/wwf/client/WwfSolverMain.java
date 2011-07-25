@@ -187,28 +187,28 @@ public class WwfSolverMain implements EntryPoint {
 
 	@UiHandler("rack")
 	void handleRackKeyUp(KeyUpEvent event) {
-		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("start")
 	void handleStartKeyUp(KeyUpEvent event) {
-		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("contains")
 	void handleContainsKeyUp(KeyUpEvent event) {
-		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("end")
 	void handleEndKeyUp(KeyUpEvent event) {
-		if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
@@ -222,6 +222,22 @@ public class WwfSolverMain implements EntryPoint {
 			testResults.setText("");
 		}
 		History.newItem("test/" + test.getText());
+	}
+	
+	private boolean validateInput() {
+		if (!InputValidator.validateRack(rack.getText())) {
+			errorLabel.setText("Invalid query. The rack may only contain letters and up to two wildcards,"
+					+ " to a maximum of 10 characters.");
+			return false;
+		} else if (
+					!InputValidator.validateOther(start.getText())
+					|| !InputValidator.validateOther(contains.getText())
+					|| !InputValidator.validateOther(end.getText())) {
+			errorLabel.setText("Invalid query. The requirement fields may only contain letters.");
+			return false;
+		}
+		errorLabel.setText("");
+		return true;
 	}
 
 	private void getAnagrams(
@@ -246,15 +262,7 @@ public class WwfSolverMain implements EntryPoint {
 			}
 		};
 		// Make the call to the solve service.
-		if (!InputValidator.validateRack(rack)) {
-			errorLabel.setText("Invalid query. The rack may only contain letters and up to two wildcards,"
-					+ " to a maximum of 10 characters.");
-		} else if (
-					!InputValidator.validateOther(start)
-					|| !InputValidator.validateOther(contains)
-					|| !InputValidator.validateOther(end)) {
-			errorLabel.setText("Invalid query. The requirement fields may only contain letters.");
-		} else {
+		if (validateInput() && rack.length() > 1) {
 			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
 		}
 	}
