@@ -52,7 +52,6 @@ public class WwfSolverPresenter {
 	
 	private void getAnagrams(String rack, String start, String contains, String end) {
 		// Set up the callback object.
-		view.setError("Loading...");
 		AsyncCallback<Result> callback = new AsyncCallback<Result>() {
 			public void onFailure(Throwable caught) {
 				view.setError("failure!");
@@ -71,6 +70,7 @@ public class WwfSolverPresenter {
 		};
 		// Make the call to the solve service.
 		if (validateInput()) {
+			view.setError("Loading...");
 			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
 		}
 	}
