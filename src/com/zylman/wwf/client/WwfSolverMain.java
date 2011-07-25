@@ -187,28 +187,36 @@ public class WwfSolverMain implements EntryPoint {
 
 	@UiHandler("rack")
 	void handleRackKeyUp(KeyUpEvent event) {
-		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput()
+				&& rack.getText().length() > 1
+				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("start")
 	void handleStartKeyUp(KeyUpEvent event) {
-		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput()
+				&& rack.getText().length() > 1
+				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("contains")
 	void handleContainsKeyUp(KeyUpEvent event) {
-		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput()
+				&& rack.getText().length() > 1
+				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
 	
 	@UiHandler("end")
 	void handleEndKeyUp(KeyUpEvent event) {
-		if (validateInput() && event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
+		if (validateInput()
+				&& rack.getText().length() > 1
+				&& event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
 			setSolveHistory();
 		}
 	}
@@ -262,7 +270,7 @@ public class WwfSolverMain implements EntryPoint {
 			}
 		};
 		// Make the call to the solve service.
-		if (validateInput() && rack.length() > 1) {
+		if (validateInput()) {
 			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
 		}
 	}
