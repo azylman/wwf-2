@@ -60,6 +60,7 @@ public class WwfSolverMain implements EntryPoint {
 		
 		// Focus the cursor on the name field when the app loads
 		rack.setFocus(true);
+		sendButton.setWidth("100px");
 
 		RootLayoutPanel.get().add(ui);
 		initializeColumns();
@@ -234,7 +235,9 @@ public class WwfSolverMain implements EntryPoint {
 
 			public void onSuccess(Result results) {
 				if (results.getError()) {
-					errorLabel.setText("Invalid query");
+					errorLabel.setText("Invalid query. You may only have letters and wildcard characters. "
+							+ "Wildcard characters may only be placed in the rack and there can be a maximum of 10 "
+							+ "characters.");
 				} else {
 					errorLabel.setText("");
 					resultList.clear();
@@ -243,13 +246,16 @@ public class WwfSolverMain implements EntryPoint {
 			}
 		};
 		// Make the call to the solve service.
-		if (InputValidator.validateRack(rack)
-				&& InputValidator.validateOther(start)
-				&& InputValidator.validateOther(contains)
-				&& InputValidator.validateOther(end)) {
-			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
+		if (!InputValidator.validateRack(rack)) {
+			errorLabel.setText("Invalid query. The rack may only contain letters and up to two wildcards,"
+					+ " to a maximum of 10 characters.");
+		} else if (
+					!InputValidator.validateOther(start)
+					|| !InputValidator.validateOther(contains)
+					|| !InputValidator.validateOther(end)) {
+			errorLabel.setText("Invalid query. The requirement fields may only contain letters.");
 		} else {
-			errorLabel.setText("Invalid query");
+			wwfSolveService.findAnagrams(rack, start, contains, end, callback);
 		}
 	}
 

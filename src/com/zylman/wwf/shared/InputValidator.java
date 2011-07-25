@@ -12,7 +12,7 @@ public final class InputValidator {
 				return false;
 			}
 		}
-		return wildcardCount < 3 && word.length() < 10;
+		return wildcardCount < 3 && word.length() < 11;
 	}
 	
 	public static boolean validateOther(String word) {

@@ -1,14 +1,15 @@
 body {
-	font-family: Verdana, Helvetica, sans-serif;
-	background-color: #FFFFF5;
+	font-family: 'Unna', serif;
+	font-size: 125%;
 	margin: 0;
 	padding: 0;
 }
 
 .page {
-	margin-left: 5%;
-	margin-right: 5%;
+	margin-left: auto;
+	margin-right: auto;
 	margin-top: 50px;
+	width: 700px;
 }
 
 div {
@@ -16,22 +17,33 @@ div {
 	padding: 0;
 }
 
-h1 {
+.heading {
 	text-align: center;
+	font-size: 250%;
+}
+
+.sub-heading {
+	font-size: 175%;
 }
 
 .column {
 	float: left;
-	width: 40%;
+	width: 305px;
+	text-align: center;
 }
 
 .column-spacer {
 	float: left;
-	width: 10%;
+	width: 90px;
 	height: 10px;
 }
 
 .centered {
 	margin-left: auto;
 	margin-right: auto;
+}
+
+.error {
+	font-size: 65%;
+	color: #FF0000;
 }
