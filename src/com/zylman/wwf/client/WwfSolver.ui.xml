@@ -4,64 +4,64 @@
 	xmlns:cell='urn:import:com.google.gwt.user.cellview.client'>
 	<ui:style field="css" src="WwfSolver.css" />
 <gwt:ScrollPanel>
-<gwt:FlowPanel styleName="{css.page}">
-	<gwt:Label styleName="{css.heading}">Words With Friends Resources</gwt:Label>
-	<gwt:HTMLPanel><br /><br /></gwt:HTMLPanel>
+<gwt:HTMLPanel styleName="{css.page}">
+	<span class="{css.heading}">Words With Friends Resources</span>
+	<br /><br />
 
-	<gwt:FlowPanel styleName="{css.column}">
-	<gwt:FlowPanel><gwt:Label styleName="{css.sub-heading}">Anagram Solver</gwt:Label></gwt:FlowPanel>
+	<div class="{css.column}">
+	  <div class="{css.sub-heading}">Anagram Solver</div>
 		
-		<gwt:Label>Enter your rack and, optionally, the letters you want to match your rack against. An asterisk (*)
-		represents a wildcard and you can have up to two.</gwt:Label>
+		Enter your rack and, optionally, the letters you want to match your rack against. An asterisk (*)
+		represents a wildcard and you can have up to two.
 		<gwt:Grid styleName="{css.centered}">
 		  <gwt:row>
 		    <gwt:cell>Rack</gwt:cell>
 		    <gwt:customCell>
-		    	<gwt:TextBox ui:field="rack"></gwt:TextBox>
+		    	<gwt:TextBox ui:field="rack" />
 		    </gwt:customCell>
 		  </gwt:row>
 		  <gwt:row>
 		    <gwt:cell>Starts with</gwt:cell>
 		    <gwt:customCell>
-		    	<gwt:TextBox ui:field="start"></gwt:TextBox>
+		    	<gwt:TextBox ui:field="start" />
 		    </gwt:customCell>
 		  </gwt:row>
 		  <gwt:row>
 		    <gwt:cell>Contains</gwt:cell>
 		    <gwt:customCell>
-		    	<gwt:TextBox ui:field="contains"></gwt:TextBox>
+		    	<gwt:TextBox ui:field="contains" />
 		    </gwt:customCell>
 		  </gwt:row>
 		  <gwt:row>
 		    <gwt:cell>Ends with</gwt:cell>
 		    <gwt:customCell>
-		    	<gwt:TextBox ui:field="end"></gwt:TextBox>
+		    	<gwt:TextBox ui:field="end" />
 		    </gwt:customCell>
 		  </gwt:row>
 		</gwt:Grid>
 		<gwt:Button ui:field="sendButton">Solve!</gwt:Button>
-		<gwt:Label ui:field="errorLabel" styleName="{css.error}"></gwt:Label>
-		<cell:CellTable ui:field="results" styleName="{css.centered}"></cell:CellTable>
-	</gwt:FlowPanel>
+		<gwt:Label ui:field="errorLabel" styleName="{css.error}" />
+		<cell:CellTable ui:field="results" styleName="{css.centered}" />
+	</div>
 	
-	<gwt:FlowPanel styleName="{css.column-spacer}"></gwt:FlowPanel>
+	<div class="{css.column-spacer}" />
 	
-	<gwt:FlowPanel styleName="{css.column}">
-		<gwt:Label styleName="{css.sub-heading}">Word Lookup</gwt:Label>
-		<gwt:Label>Enter a word to look up its point value.</gwt:Label>
+	<div class="{css.column}">
+		<div class="{css.sub-heading}">Word Lookup</div>
+		Enter a word to look up its point value.
 		<gwt:Grid styleName="{css.centered}">
 			<gwt:row>
 				<gwt:cell>Word</gwt:cell>
 				<gwt:customCell>
-					<gwt:TextBox ui:field="test"></gwt:TextBox>
+					<gwt:TextBox ui:field="test" />
 				</gwt:customCell>
 			</gwt:row>
 		</gwt:Grid>
-		<gwt:Label ui:field="testResults"></gwt:Label>
-		<gwt:HTMLPanel styleName="{css.source}">
+		<gwt:Label ui:field="testResults" />
+		<div class="{css.source}">
 		  By Alex Zylman - <a href="https://github.com/azylman/wwf-2">Source on GitHub</a>
-		</gwt:HTMLPanel>
-	</gwt:FlowPanel>
-</gwt:FlowPanel>
+		</div>
+	</div>
+</gwt:HTMLPanel>
 </gwt:ScrollPanel>
 </ui:UiBinder>
