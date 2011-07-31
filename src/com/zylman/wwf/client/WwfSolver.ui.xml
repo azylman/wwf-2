@@ -58,6 +58,9 @@
 			</gwt:row>
 		</gwt:Grid>
 		<gwt:Label ui:field="testResults"></gwt:Label>
+		<gwt:HTMLPanel styleName="{css.source}">
+		  By Alex Zylman - <a href="https://github.com/azylman/wwf-2">Source on GitHub</a>
+		</gwt:HTMLPanel>
 	</gwt:FlowPanel>
 </gwt:FlowPanel>
 </gwt:ScrollPanel>
