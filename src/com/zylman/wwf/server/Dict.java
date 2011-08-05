@@ -74,7 +74,7 @@ public class Dict {
 		}
 	}
 
-	protected int wordSearch(String word, String contains, String end, int numWildcards,
+	private int wordSearch(String word, String contains, String end, int numWildcards,
 			SortedSet<SolveResult> results, Trie node) {
 		if (node == null) {
 			return 0;
@@ -154,7 +154,7 @@ public class Dict {
 		return result == null ? false : !result.getWord().isEmpty();
 	}
 
-	public Trie getNode(String word, Trie node) {
+	private Trie getNode(String word, Trie node) {
 		if (node == null) {
 			return null;
 		}
