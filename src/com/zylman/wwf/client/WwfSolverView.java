@@ -184,7 +184,7 @@ public class WwfSolverView extends Composite {
 	public boolean validateInput() {
 		if (!InputValidator.validateRack(rack.getText())) {
 			errorLabel.setText("Invalid query. The rack may only contain letters and up to two wildcards,"
-					+ " to a maximum of 10 characters.");
+					+ " to a maximum of 15 characters.");
 			return false;
 		} else if (
 					!InputValidator.validateOther(start.getText())
