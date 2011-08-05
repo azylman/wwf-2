@@ -4,9 +4,9 @@ import java.util.LinkedHashMap;
 import java.util.Iterator;
 
 public class Trie {
-	protected LinkedHashMap<Character, Trie> children = new LinkedHashMap<Character, Trie>();
-	protected String word = "";
-	protected int size = 0;
+	private LinkedHashMap<Character, Trie> children = new LinkedHashMap<Character, Trie>();
+	private String word = "";
+	private int size = 0;
 	
 	public Trie() {
 	}
@@ -55,7 +55,11 @@ public class Trie {
 		return word;
 	}
 	
-	public void setWord(String word) {
+	private void setWord(String word) {
 		this.word = word;
+	}
+	
+	public int getSize() {
+		return size;
 	}
 }
