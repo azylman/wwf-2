@@ -74,74 +74,79 @@ public class Dict {
 		}
 	}
 
-	protected boolean wordSearch(String word, String contains, String end,
+	protected int wordSearch(String word, String contains, String end, int numWildcards,
 			SortedSet<SolveResult> results, Trie node) {
 		if (node == null) {
-			return false;
+			return 0;
 		}
 
 		Trie endNode = getNode(end, node);
-
+		
 		if (endNode != null && contains.isEmpty() && !endNode.getWord().isEmpty()) {
 			results.add(new SolveResult(endNode.getWord(), score(endNode.getWord())));
+		}
+		
+		int count = 0;
+		
+		if (numWildcards > 0) {
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('a'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('b'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('c'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('d'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('e'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('f'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('g'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('h'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('i'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('j'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('k'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('l'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('m'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('n'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('o'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('p'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('q'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('r'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('s'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('t'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('u'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('v'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('w'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('x'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('y'));
+			count += wordSearch(word, contains, end, numWildcards - 1, results, node.next('z'));
 		}
 
 		for (int i = 0; i < word.length(); i++) {
 			Character ch = word.charAt(i);
-			if (ch == '*') {
-				String newWord = word.substring(0, i).concat(
-						word.substring(i + 1));
-
-				wordSearch(newWord, contains, end, results, node.next('a'));
-				wordSearch(newWord, contains, end, results, node.next('b'));
-				wordSearch(newWord, contains, end, results, node.next('c'));
-				wordSearch(newWord, contains, end, results, node.next('d'));
-				wordSearch(newWord, contains, end, results, node.next('e'));
-				wordSearch(newWord, contains, end, results, node.next('f'));
-				wordSearch(newWord, contains, end, results, node.next('g'));
-				wordSearch(newWord, contains, end, results, node.next('h'));
-				wordSearch(newWord, contains, end, results, node.next('i'));
-				wordSearch(newWord, contains, end, results, node.next('j'));
-				wordSearch(newWord, contains, end, results, node.next('k'));
-				wordSearch(newWord, contains, end, results, node.next('l'));
-				wordSearch(newWord, contains, end, results, node.next('m'));
-				wordSearch(newWord, contains, end, results, node.next('n'));
-				wordSearch(newWord, contains, end, results, node.next('o'));
-				wordSearch(newWord, contains, end, results, node.next('p'));
-				wordSearch(newWord, contains, end, results, node.next('q'));
-				wordSearch(newWord, contains, end, results, node.next('r'));
-				wordSearch(newWord, contains, end, results, node.next('s'));
-				wordSearch(newWord, contains, end, results, node.next('t'));
-				wordSearch(newWord, contains, end, results, node.next('u'));
-				wordSearch(newWord, contains, end, results, node.next('v'));
-				wordSearch(newWord, contains, end, results, node.next('w'));
-				wordSearch(newWord, contains, end, results, node.next('x'));
-				wordSearch(newWord, contains, end, results, node.next('y'));
-				wordSearch(newWord, contains, end, results, node.next('z'));
-			} else {
-				String newWord = word.substring(0, i).concat(
-						word.substring(i + 1));
-				wordSearch(newWord, contains, end, results, node.next(ch));
-			}
+			String newWord = word.substring(0, i).concat(word.substring(i + 1));
+			count += wordSearch(newWord, contains, end, numWildcards, results, node.next(ch));
 		}
 
 		if (!contains.isEmpty()) {
-			wordSearch(word, "", end, results, getNode(contains, node));
+			count += wordSearch(word, "", end, numWildcards, results, getNode(contains, node));
 		}
 
-		return false;
+		return count + 1;
 	}
 
 	public void solve(String word, String start, String contains, String end,
 			SortedSet<SolveResult> results) {
 		Trie node = getNode(start.toLowerCase(), wordList);
-
+		
+		int numWildcards = removeWildcards(word);
+		
 		if (node == null) {
 			return;
 		}
 
-		wordSearch(word.toLowerCase(), contains.toLowerCase(),
-				end.toLowerCase(), results, node);
+		wordSearch(
+				word.toLowerCase(),
+				contains.toLowerCase(),
+				end.toLowerCase(),
+				numWildcards,
+				results,
+				node);
 	}
 
 	public boolean isWord(String word) {
@@ -158,5 +163,15 @@ public class Dict {
 		}
 
 		return getNode(word.substring(1), node.next(word.charAt(0)));
+	}
+	
+	private int removeWildcards(String word) {
+		if (word.contains("*")) {
+			int wildcardIndex = word.indexOf("*");
+			word = word.substring(0, wildcardIndex).concat(word.substring(wildcardIndex + 1));
+			return 1 + removeWildcards(word);
+		} else {
+			return 0;
+		}
 	}
 }
