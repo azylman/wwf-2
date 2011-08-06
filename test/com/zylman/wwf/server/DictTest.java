@@ -99,10 +99,10 @@ public class DictTest {
 	}
 
 	private void assertEqual() {
-		assertEquals(results,expected);
+		assertEquals(expected, results);
 	}
 
 	private void assertSize(int size) {
-		assertEquals(results.size(),size);
+		assertEquals(size, results.size());
 	}
 }
