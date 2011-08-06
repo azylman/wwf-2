@@ -30,14 +30,6 @@ public class SolveResult implements Comparable<SolveResult>, IsSerializable {
 	// Actually compares opposite of expected, because we need our priority
 	// queue to be reversed
 	public int compareTo(SolveResult r) {
-		if (getScore() != r.getScore()) {
-			return (getScore() < r.getScore()) ? 1 : -1;
-		}
-
-		if (getLength() != r.getLength()) {
-			return (getLength() < r.getLength()) ? 1 : -1;
-		}
-
 		return -getWord().compareTo(r.getWord());
 	}
 }
